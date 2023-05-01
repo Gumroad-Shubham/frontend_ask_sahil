@@ -1,0 +1,45 @@
+name: Pull and run from EC2
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+  SSH_USER: ubuntu
+  SSH_HOST: ${{ vars.SSH_HOST }}
+  OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+  FOR_AWS_TO_GITHUB: ${{ secrets.FOR_AWS_TO_GITHUB_PVT }}
+  PROJECT_NAME: ask_sahil
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ env.EC2_SSH_KEY }}
+
+      - name: Pull & run from EC2
+        run: |
+          curl https://raw.githubusercontent.com/Gumroad-Shubham/Workflows/master/ec2-setup.sh >> ./ec2-setup.sh &&
+          chmod +x ./ec2-setup.sh &&
+          ./ec2-setup.sh && 
+          rm ec2-setup.sh &&
+          ssh -o StrictHostKeyChecking=no ${{ env.SSH_USER }}@${{ env.SSH_HOST }} '
+          if ! command -v docker &> /dev/null; then
+            sudo apt-get update -y &&
+            y | sudo apt-get install -y docker.io
+          fi &&
+          if ! command -v docker-compose &> /dev/null; then
+            sudo apt-get update -y &&
+            y | sudo apt  install docker-compose
+          fi &&
+          cd ~/Desktop/${{ env.PROJECT_NAME }} &&
+          tmux new-session -d -s frontendautodeploy`date +%s` "y|npm start"'
