@@ -1,0 +1,151 @@
+:root {
+  --gumroad-yellow: #ffcd00;
+  --gumroad-pink: #ff60e8;
+  --gumroad-red: #ff0484;
+  --radii: 280px; /*20vw;*/
+}
+
+.toplevel-row {
+  display: flex;
+  min-width: 100vw;
+  min-height: 100vh;
+  flex-direction: row;
+  color: black;
+  line-height: 1.6rem;
+  background-color: var(--gumroad-pink);
+}
+
+.left-column {
+  background-color: var(--gumroad-yellow);
+  flex-grow: 1;
+  border-radius: 0 0 0 0;
+}
+
+.right-column {
+  flex-grow: 1;
+  background-color: var(--gumroad-pink);
+}
+
+.center-column {
+  background-color: white;
+  max-width: 40rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border-radius: 0 var(--radii) var(--radii) var(--radii);
+  padding: 15px;
+}
+
+.center-bg {
+  display: flex;
+  background: linear-gradient(
+    to right,
+    var(--gumroad-yellow) 0%,
+    var(--gumroad-yellow) 50%,
+    var(--gumroad-pink) 50%,
+    var(--gumroad-pink) 100%
+  );
+}
+
+.center-bottom {
+  width : 100%;
+  height: 250px;
+  border-radius: 0 0 var(--radii) var(--radii);
+}
+
+.book-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.book-image {
+  width: 12em;
+  border-radius: 3px 40px 40px 3px;
+}
+
+.book-left {
+  flex-grow: 1;
+  background-color: var(--gumroad-yellow);
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.book-left-bottom {
+  background-color: white;
+  height: 135px;
+  border-radius: var(--radii) 0 0 0;
+}
+
+
+.book-right {
+  flex-grow: 1;
+}
+
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,1.0);
+  transition: 0.3s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 var(--gumroad-red);
+  transform: scale(1.02);
+}
+
+p {
+  text-align: justify;
+  margin: 0 0 0 3px;
+  font-size: 1.1em;
+  word-wrap: break-word;
+}
+
+.description {
+  color: gray;
+  margin: 0 10px;
+}
+
+button {
+  display: inline-block;
+  color: white;
+  background: black;
+  margin-top: 1rem;
+  max-width: 15em;
+  padding: 8px 18px;
+  cursor: pointer;
+  background-color: var(--gumroad-pink);
+}
+
+textarea, button {
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-size: 18px;
+  padding: 8px 12px;
+  margin: 15px 5px 0 5px;
+}
+
+textarea {
+  background-color: var(--gumroad-red);
+  height: 4.2rem;
+  line-height: 1.8rem;
+}
+
+.lucky-button {
+  background-color: var(--gumroad-yellow);
+  color: black;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+button:hover {
+  box-shadow: 0 6px 12px 0 rgba(0,0,0,0.3);
+}
+
+
+h {
+  font-family: 'Mabry pro', 'sans-serif';
+}
