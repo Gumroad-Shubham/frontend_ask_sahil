@@ -9,9 +9,8 @@ env:
   EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
   SSH_USER: ubuntu
   SSH_HOST: ${{ vars.SSH_HOST }}
-  OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
   FOR_AWS_TO_GITHUB: ${{ secrets.FOR_AWS_TO_GITHUB_PVT }}
-  PROJECT_NAME: ask_sahil
+  PROJECT_NAME: frontend_ask_sahil
 
 jobs:
   deploy:
