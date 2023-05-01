@@ -33,5 +33,6 @@ jobs:
           rm ec2-setup.sh &&
           ssh -o StrictHostKeyChecking=no ${{ env.SSH_USER }}@${{ env.SSH_HOST }} '
           cd ~/Desktop/${{ env.PROJECT_NAME }} &&
-          echo "Starting ${{ env.PROJECT_NAME }} in tmux frontendautodeploy`date +%s`"
+          echo "Starting ${{ env.PROJECT_NAME }} in tmux frontendautodeploy`date +%s`" &&
+          sudo apt install npm &&
           tmux new-session -d -s frontendautodeploy`date +%s` "y|npm start"'
