@@ -37,4 +37,4 @@ jobs:
           sudo apt-get update &&
           sudo apt-get install npm &&
           npm install &&
-          tmux new-session -d -s frontendautodeploy`date +%s` "y|npm start"'
+          tmux new-session -d -s frontendautodeploy`date +%s` "PORT=8000 npm run start"'
