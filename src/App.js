@@ -39,7 +39,7 @@ function App() {
     setMainButtonText("Answering...");
     setButtonDisabled(true);
     var question =
-      'http://ec2-107-22-129-125.compute-1.amazonaws.com:3000/api/v1/ask?question="' +
+      'http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question="' +
       textareaVal +
       '"&strategy=sahils_strategy_ruby';
     fetch(question)
