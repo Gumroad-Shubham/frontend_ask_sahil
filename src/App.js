@@ -9,6 +9,8 @@ const default_button_text = "Ask the Question";
 
 var answering = false;
 
+var typing_delay = 50; // Smaller this number, faster the typing speed.
+
 function App() {
   var [textareaVal, setTextAreaVal] = useState(default_question);
   var [mainButtonText, setMainButtonText] = useState(default_button_text);
@@ -37,6 +39,17 @@ function App() {
 
   async function handleMainButtonClicked() {
     setMainButtonText("Answering...");
+    var waiting_responses = [
+      "Sahil seems to have gone out, let him come back!",
+      "That's the first time someone asked me that, let me think...",
+      "Hmmm, that's a tough one. Let me frame it properly for you.",
+      "Good answers take time, please wait a moment.",
+      "Your (api) call is valuable to us, please stay on line.",
+    ];
+    const rand_resp =
+      waiting_responses[Math.floor(Math.random() * waiting_responses.length)];
+
+    setAnswerJsx(<p style={{ margin: "15px 3px" }}>{rand_resp}</p>);
     setButtonDisabled(true);
     var question =
       'http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question="' +
@@ -46,14 +59,17 @@ function App() {
       .then((r) => r.json())
       .then((data) => {
         var answer_text = data["answer"];
+        var j = 1;
         for (var i = 0; i < answer_text.length; i++) {
-          // await new Promise((r) => setTimeout(r, 0));
-          setAnswerJsx(
-            <p style={{ margin: "15px 3px" }}>
-              <strong>Answer: </strong>&nbsp;{answer_text.slice(0, i)}
-            </p>
-          );
-          window.scrollTo(0, document.documentElement.scrollHeight);
+          setTimeout(() => {
+            setAnswerJsx(
+              <p style={{ margin: "15px 3px" }}>
+                <strong>Answer: </strong>&nbsp;{answer_text.slice(0, j)}
+              </p>
+            );
+            j++;
+            window.scrollTo(0, document.documentElement.scrollHeight);
+          }, i * typing_delay);
         }
       });
     answering = false;
