@@ -83,13 +83,13 @@
 
 .card {
   /* Add shadows to create the "card" effect */
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,1.0);
+  box-shadow: 0 8px 16px 0 var(--gumroad-red);
   transition: 0.3s;
 }
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {
-  box-shadow: 0 8px 16px 0 var(--gumroad-red);
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,1.0);
   transform: scale(1.02);
 }
 
@@ -148,4 +148,8 @@ button:hover {
 
 h {
   font-family: 'Mabry pro', 'sans-serif';
+}
+
+.question {
+  color: white;
 }

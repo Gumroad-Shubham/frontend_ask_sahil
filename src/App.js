@@ -51,11 +51,11 @@ function App() {
 
     setAnswerJsx(<p style={{ margin: "15px 3px" }}>{rand_resp}</p>);
     setButtonDisabled(true);
-    var question =
+    var api_call_string =
       'http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question="' +
       textareaVal +
       '"&strategy=sahils_strategy_ruby';
-    fetch(question)
+    fetch(api_call_string)
       .then((r) => r.json())
       .then((data) => {
         var answer_text = data["answer"];
@@ -105,6 +105,7 @@ function App() {
             :D
           </p>
           <textarea
+            className="question"
             onChange={(event) => {
               handleQuestionChanged(event.target.value);
             }}
