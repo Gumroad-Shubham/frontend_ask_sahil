@@ -14,7 +14,7 @@ const typing_delay = 50; // Smaller this number, faster the typing speed.
 function App() {
   var [textareaVal, setTextAreaVal] = useState(default_question);
   var [mainButtonText, setMainButtonText] = useState(default_button_text);
-  var [buttonDisabled, setButtonDisabled] = useState(false);
+  var [buttonsDisabled, setButtonsDisabled] = useState(false);
   var [answerJsx, setAnswerJsx] = useState(null);
 
   function reSetButton() {
@@ -24,10 +24,10 @@ function App() {
     var trimmedTextAreaVal = textareaVal.trim();
     if (trimmedTextAreaVal) {
       setMainButtonText(default_button_text);
-      setButtonDisabled(false);
+      setButtonsDisabled(false);
     } else {
       setMainButtonText("Ask a Question");
-      setButtonDisabled(true);
+      setButtonsDisabled(true);
     }
   }
 
@@ -51,7 +51,7 @@ function App() {
       waiting_responses[Math.floor(Math.random() * waiting_responses.length)];
 
     setAnswerJsx(<p style={{ margin: "15px 3px" }}>{rand_resp}</p>);
-    setButtonDisabled(true);
+    setButtonsDisabled(true);
 
     var ques_field = lucky ? "I am feeling lucky" : textareaVal;
 
@@ -133,7 +133,7 @@ function App() {
           <div display="flex">
             <button
               type="button"
-              disabled={buttonDisabled}
+              disabled={buttonsDisabled}
               onClick={handleMainButtonClicked}
             >
               {mainButtonText}
@@ -141,7 +141,7 @@ function App() {
             <button
               type="button"
               className="lucky-button"
-              disabled={buttonDisabled}
+              disabled={buttonsDisabled}
               onClick={handleLuckyButtonClicked}
             >
               I'm Feeling Lucky
