@@ -9,7 +9,7 @@ const default_button_text = "Ask the Question";
 
 var answering = false;
 
-var typing_delay = 50; // Smaller this number, faster the typing speed.
+const typing_delay = 50; // Smaller this number, faster the typing speed.
 
 function App() {
   var [textareaVal, setTextAreaVal] = useState(default_question);
@@ -38,6 +38,7 @@ function App() {
   }
 
   async function handleButtonClicked(lucky) {
+    answering = true;
     setMainButtonText("Answering...");
     var waiting_responses = [
       "Sahil seems to have gone out, he'll be back in a second!",
@@ -63,6 +64,15 @@ function App() {
       .then((data) => {
         setTextAreaVal(data["question"]);
         var answer_text = data["answer"];
+
+        const total_time_to_type = typing_delay * answer_text.length;
+
+        setTimeout(() => {
+          window.scrollTo(0, document.documentElement.scrollHeight);
+          answering = false;
+          reSetButton();
+        }, total_time_to_type);
+
         var j = 1;
         for (var i = 0; i < answer_text.length; i++) {
           setTimeout(() => {
@@ -72,12 +82,9 @@ function App() {
               </p>
             );
             j++;
-            window.scrollTo(0, document.documentElement.scrollHeight);
           }, i * typing_delay);
         }
       });
-    answering = false;
-    reSetButton();
   }
 
   async function handleMainButtonClicked() {
