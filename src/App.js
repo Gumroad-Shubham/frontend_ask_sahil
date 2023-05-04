@@ -37,10 +37,10 @@ function App() {
     setTextAreaVal(newTextAreaVal);
   }
 
-  async function handleMainButtonClicked() {
+  async function handleButtonClicked(lucky) {
     setMainButtonText("Answering...");
     var waiting_responses = [
-      "Sahil seems to have gone out, let him come back!",
+      "Sahil seems to have gone out, he'll be back in a second!",
       "That's the first time someone asked me that, let me think...",
       "Hmmm, that's a tough one. Let me frame it properly for you.",
       "Good answers take time, please wait a moment.",
@@ -51,13 +51,17 @@ function App() {
 
     setAnswerJsx(<p style={{ margin: "15px 3px" }}>{rand_resp}</p>);
     setButtonDisabled(true);
+
+    var ques_field = lucky ? "I am feeling lucky" : textareaVal;
+
     var api_call_string =
-      'http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question="' +
-      textareaVal +
-      '"&strategy=sahils_strategy_ruby';
+      "http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question=" +
+      ques_field +
+      "&strategy=sahils_strategy_ruby";
     fetch(api_call_string)
       .then((r) => r.json())
       .then((data) => {
+        setTextAreaVal(data["question"]);
         var answer_text = data["answer"];
         var j = 1;
         for (var i = 0; i < answer_text.length; i++) {
@@ -74,6 +78,14 @@ function App() {
       });
     answering = false;
     reSetButton();
+  }
+
+  async function handleMainButtonClicked() {
+    handleButtonClicked(false);
+  }
+
+  async function handleLuckyButtonClicked() {
+    handleButtonClicked(true);
   }
 
   return (
@@ -119,7 +131,14 @@ function App() {
             >
               {mainButtonText}
             </button>
-            <button className="lucky-button">I'm Feeling Lucky</button>
+            <button
+              type="button"
+              className="lucky-button"
+              disabled={buttonDisabled}
+              onClick={handleLuckyButtonClicked}
+            >
+              I'm Feeling Lucky
+            </button>
           </div>
           {answerJsx}
           <div className="book-binding"></div>
