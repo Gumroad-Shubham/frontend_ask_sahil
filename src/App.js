@@ -72,6 +72,8 @@ function App() {
         setTextAreaVal(data["question"]);
         var answer_text = data["answer"];
 
+        window.responsiveVoice.speak(answer_text, "UK English Male");
+
         const total_time_to_type = typing_delay * answer_text.length;
 
         setTimeout(() => {
