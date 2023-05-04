@@ -1,6 +1,5 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 const default_question =
   "How do I decide what kind of business I should start?";
