@@ -14,24 +14,31 @@ const typing_delay = 50; // Smaller this number, faster the typing speed.
 function App() {
   var [textareaVal, setTextAreaVal] = useState(default_question);
   var [mainButtonText, setMainButtonText] = useState(default_button_text);
-  var [buttonsDisabled, setButtonsDisabled] = useState(false);
+  var [mainButtonDisabled, setMainButtonDisabled] = useState(false);
+  var [luckyButtonDisabled, setLuckyButtonDisabled] = useState(false);
   var [answerJsx, setAnswerJsx] = useState(null);
 
-  function reSetButton() {
+  function setBothButtonsDisabled(value) {
+    setMainButtonDisabled(value);
+    setLuckyButtonDisabled(value);
+  }
+
+  function reSetButtons() {
     if (answering) {
       return;
     }
     var trimmedTextAreaVal = textareaVal.trim();
     if (trimmedTextAreaVal) {
       setMainButtonText(default_button_text);
-      setButtonsDisabled(false);
+      setBothButtonsDisabled(false);
     } else {
       setMainButtonText("Ask a Question");
-      setButtonsDisabled(true);
+      setMainButtonDisabled(true);
+      setLuckyButtonDisabled(false);
     }
   }
 
-  useEffect(reSetButton, [textareaVal]);
+  useEffect(reSetButtons, [textareaVal]);
 
   function handleQuestionChanged(newTextAreaVal) {
     setTextAreaVal(newTextAreaVal);
@@ -51,7 +58,7 @@ function App() {
       waiting_responses[Math.floor(Math.random() * waiting_responses.length)];
 
     setAnswerJsx(<p style={{ margin: "15px 3px" }}>{rand_resp}</p>);
-    setButtonsDisabled(true);
+    setBothButtonsDisabled(true);
 
     var ques_field = lucky ? "I am feeling lucky" : textareaVal;
 
@@ -70,7 +77,7 @@ function App() {
         setTimeout(() => {
           window.scrollTo(0, document.documentElement.scrollHeight);
           answering = false;
-          reSetButton();
+          reSetButtons();
         }, total_time_to_type);
 
         var j = 1;
@@ -133,7 +140,7 @@ function App() {
           <div display="flex">
             <button
               type="button"
-              disabled={buttonsDisabled}
+              disabled={mainButtonDisabled}
               onClick={handleMainButtonClicked}
             >
               {mainButtonText}
@@ -141,7 +148,7 @@ function App() {
             <button
               type="button"
               className="lucky-button"
-              disabled={buttonsDisabled}
+              disabled={luckyButtonDisabled}
               onClick={handleLuckyButtonClicked}
             >
               I'm Feeling Lucky
