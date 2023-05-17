@@ -6,8 +6,6 @@ const default_question =
 
 const default_button_text = "Ask the Question";
 
-var answering = false;
-
 const typing_delay = 50; // Smaller this number, faster the typing speed.
 
 function App() {
@@ -16,6 +14,7 @@ function App() {
   const [mainButtonDisabled, setMainButtonDisabled] = useState(false);
   const [luckyButtonDisabled, setLuckyButtonDisabled] = useState(false);
   const [answerJsx, setAnswerJsx] = useState(null);
+  const [answering, setAnswering] = useState(false);
 
   const setBothButtonsDisabled = (value) => {
     setMainButtonDisabled(value);
@@ -44,7 +43,7 @@ function App() {
   };
 
   const handleButtonClicked = (lucky) => {
-    answering = true;
+    setAnswering(true);
     setMainButtonText("Answering...");
     const waiting_responses = [
       "Sahil seems to have gone out, he'll be back in a second!",
@@ -77,7 +76,7 @@ function App() {
 
         setTimeout(() => {
           window.scrollTo(0, document.documentElement.scrollHeight);
-          answering = false;
+          setAnswering(false);
           reSetButtons();
         }, total_time_to_type);
 
