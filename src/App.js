@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const defaultQuestion = "How do I decide what kind of business I should start?";
 
@@ -20,7 +20,7 @@ function App() {
     setLuckyButtonDisabled(value);
   };
 
-  const reSetButtons = () => {
+  const reSetButtons = useCallback(() => {
     if (answering) {
       return;
     }
@@ -33,62 +33,67 @@ function App() {
       setMainButtonDisabled(true);
       setLuckyButtonDisabled(false);
     }
-  };
+  }, [answering, textareaValue]);
 
-  useEffect(reSetButtons, [textareaValue, answering]);
+  useEffect(reSetButtons, [textareaValue, answering, reSetButtons]);
 
   const handleQuestionChanged = (newTextareaValue) => {
     settextareaValue(newTextareaValue);
   };
 
-  const handleButtonClicked = (lucky) => {
-    setAnswering(true);
-    setMainButtonText("Answering...");
-    const waitingResponses = [
-      "Sahil seems to have gone out, he'll be back in a second!",
-      "That's the first time someone asked me that, let me think...",
-      "Hmmm, that's a tough one. Let me frame it properly for you.",
-      "Good answers take time, please wait a moment.",
-      "Your (api) call is valuable to us, please stay on line.",
-    ];
-    const randomWaitingResponse =
-      waitingResponses[Math.floor(Math.random() * waitingResponses.length)];
+  const handleButtonClicked = useCallback(
+    (lucky) => {
+      setAnswering(true);
+      setMainButtonText("Answering...");
+      const waitingResponses = [
+        "Sahil seems to have gone out, he'll be back in a second!",
+        "That's the first time someone asked me that, let me think...",
+        "Hmmm, that's a tough one. Let me frame it properly for you.",
+        "Good answers take time, please wait a moment.",
+        "Your (api) call is valuable to us, please stay on line.",
+      ];
+      const randomWaitingResponse =
+        waitingResponses[Math.floor(Math.random() * waitingResponses.length)];
 
-    setAnswerJsx(<p style={{ margin: "15px 3px" }}>{randomWaitingResponse}</p>);
-    setBothButtonsDisabled(true);
+      setAnswerJsx(
+        <p style={{ margin: "15px 3px" }}>{randomWaitingResponse}</p>
+      );
+      setBothButtonsDisabled(true);
 
-    const questionField = lucky ? "I am feeling lucky" : textareaValue;
+      const questionField = lucky ? "I am feeling lucky" : textareaValue;
 
-    const apiCallString =
-      "http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question=" +
-      questionField +
-      "&strategy=sahils_strategy_ruby";
-    fetch(apiCallString)
-      .then((resp) => resp.json())
-      .then((data) => {
-        settextareaValue(data.question);
-        const answer = data.answer;
+      const apiCallString =
+        "http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question=" +
+        questionField +
+        "&strategy=sahils_strategy_ruby";
+      fetch(apiCallString)
+        .then((resp) => resp.json())
+        .then((data) => {
+          settextareaValue(data.question);
+          const answer = data.answer;
 
-        window.responsiveVoice.speak(answer, "UK English Male");
+          window.responsiveVoice.speak(answer, "UK English Male");
 
-        const totalTypingTime = typingDelay * answer.length;
+          const totalTypingTime = typingDelay * answer.length;
 
-        for (let i = 0; i < answer.length; i++) {
+          for (let i = 0; i < answer.length; i++) {
+            setTimeout(() => {
+              setAnswerJsx(
+                <p style={{ margin: "15px 3px" }}>
+                  <strong>Answer: </strong>&nbsp;{answer.slice(0, i + 1)}
+                </p>
+              );
+            }, i * typingDelay);
+          }
           setTimeout(() => {
-            setAnswerJsx(
-              <p style={{ margin: "15px 3px" }}>
-                <strong>Answer: </strong>&nbsp;{answer.slice(0, i + 1)}
-              </p>
-            );
-          }, i * typingDelay);
-        }
-        setTimeout(() => {
-          window.scrollTo(0, document.documentElement.scrollHeight);
-          setAnswering(false);
-          reSetButtons();
-        }, totalTypingTime);
-      });
-  };
+            window.scrollTo(0, document.documentElement.scrollHeight);
+            setAnswering(false);
+            reSetButtons();
+          }, totalTypingTime);
+        });
+    },
+    [reSetButtons, textareaValue]
+  );
 
   function handleMainButtonClicked() {
     handleButtonClicked(false);
