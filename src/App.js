@@ -43,7 +43,7 @@ function App() {
     setTextAreaVal(newTextAreaVal);
   }
 
-  async function handleButtonClicked(lucky) {
+  function handleButtonClicked(lucky) {
     answering = true;
     setMainButtonText("Answering...");
     var waiting_responses = [
@@ -95,11 +95,11 @@ function App() {
       });
   }
 
-  async function handleMainButtonClicked() {
+  function handleMainButtonClicked() {
     handleButtonClicked(false);
   }
 
-  async function handleLuckyButtonClicked() {
+  function handleLuckyButtonClicked() {
     handleButtonClicked(true);
   }
 
