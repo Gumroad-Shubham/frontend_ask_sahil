@@ -11,22 +11,22 @@ var answering = false;
 const typing_delay = 50; // Smaller this number, faster the typing speed.
 
 function App() {
-  var [textareaVal, setTextAreaVal] = useState(default_question);
-  var [mainButtonText, setMainButtonText] = useState(default_button_text);
-  var [mainButtonDisabled, setMainButtonDisabled] = useState(false);
-  var [luckyButtonDisabled, setLuckyButtonDisabled] = useState(false);
-  var [answerJsx, setAnswerJsx] = useState(null);
+  const [textareaVal, setTextAreaVal] = useState(default_question);
+  const [mainButtonText, setMainButtonText] = useState(default_button_text);
+  const [mainButtonDisabled, setMainButtonDisabled] = useState(false);
+  const [luckyButtonDisabled, setLuckyButtonDisabled] = useState(false);
+  const [answerJsx, setAnswerJsx] = useState(null);
 
-  function setBothButtonsDisabled(value) {
+  const setBothButtonsDisabled = (value) => {
     setMainButtonDisabled(value);
     setLuckyButtonDisabled(value);
-  }
+  };
 
-  function reSetButtons() {
+  const reSetButtons = () => {
     if (answering) {
       return;
     }
-    var trimmedTextAreaVal = textareaVal.trim();
+    const trimmedTextAreaVal = textareaVal.trim();
     if (trimmedTextAreaVal) {
       setMainButtonText(default_button_text);
       setBothButtonsDisabled(false);
@@ -35,18 +35,18 @@ function App() {
       setMainButtonDisabled(true);
       setLuckyButtonDisabled(false);
     }
-  }
+  };
 
   useEffect(reSetButtons, [textareaVal]);
 
-  function handleQuestionChanged(newTextAreaVal) {
+  const handleQuestionChanged = (newTextAreaVal) => {
     setTextAreaVal(newTextAreaVal);
-  }
+  };
 
-  function handleButtonClicked(lucky) {
+  const handleButtonClicked = (lucky) => {
     answering = true;
     setMainButtonText("Answering...");
-    var waiting_responses = [
+    const waiting_responses = [
       "Sahil seems to have gone out, he'll be back in a second!",
       "That's the first time someone asked me that, let me think...",
       "Hmmm, that's a tough one. Let me frame it properly for you.",
@@ -59,9 +59,9 @@ function App() {
     setAnswerJsx(<p style={{ margin: "15px 3px" }}>{rand_resp}</p>);
     setBothButtonsDisabled(true);
 
-    var ques_field = lucky ? "I am feeling lucky" : textareaVal;
+    const ques_field = lucky ? "I am feeling lucky" : textareaVal;
 
-    var api_call_string =
+    const api_call_string =
       "http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question=" +
       ques_field +
       "&strategy=sahils_strategy_ruby";
@@ -69,7 +69,7 @@ function App() {
       .then((r) => r.json())
       .then((data) => {
         setTextAreaVal(data["question"]);
-        var answer_text = data["answer"];
+        const answer_text = data["answer"];
 
         window.responsiveVoice.speak(answer_text, "UK English Male");
 
@@ -81,8 +81,8 @@ function App() {
           reSetButtons();
         }, total_time_to_type);
 
-        var j = 1;
-        for (var i = 0; i < answer_text.length; i++) {
+        let j = 1;
+        for (let i = 0; i < answer_text.length; i++) {
           setTimeout(() => {
             setAnswerJsx(
               <p style={{ margin: "15px 3px" }}>
@@ -93,7 +93,7 @@ function App() {
           }, i * typing_delay);
         }
       });
-  }
+  };
 
   function handleMainButtonClicked() {
     handleButtonClicked(false);
