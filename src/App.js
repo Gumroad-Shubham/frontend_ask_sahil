@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const default_question =
   "How do I decide what kind of business I should start?";
@@ -103,6 +103,16 @@ function App() {
     handleButtonClicked(true);
   }
 
+  const textareaRef = useRef(null);
+  const askButtonRef = useRef(null);
+
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault(); // Prevents adding a new line in the text area
+      askButtonRef.current.click();
+    }
+  };
+
   return (
     <div className="toplevel-row">
       <div className="left-column"></div>
@@ -137,12 +147,15 @@ function App() {
               handleQuestionChanged(event.target.value);
             }}
             value={textareaVal}
+            onKeyDown={handleKeyDown}
+            ref={textareaRef}
           ></textarea>
           <div display="flex">
             <button
               type="button"
               disabled={mainButtonDisabled}
               onClick={handleMainButtonClicked}
+              ref={askButtonRef}
             >
               {mainButtonText}
             </button>
