@@ -36,7 +36,7 @@ function App() {
     }
   };
 
-  useEffect(reSetButtons, [textareaVal]);
+  useEffect(reSetButtons, [textareaVal, answering]);
 
   const handleQuestionChanged = (newTextAreaVal) => {
     setTextAreaVal(newTextAreaVal);
