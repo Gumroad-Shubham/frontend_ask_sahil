@@ -1,16 +1,15 @@
 import "./App.css";
 import { useEffect, useRef, useState } from "react";
 
-const default_question =
-  "How do I decide what kind of business I should start?";
+const defaultQuestion = "How do I decide what kind of business I should start?";
 
-const default_button_text = "Ask the Question";
+const defaultButtonText = "Ask the Question";
 
-const typing_delay = 50; // Smaller this number, faster the typing speed.
+const typingDelay = 50; // Smaller this number, faster the typing speed.
 
 function App() {
-  const [textareaVal, setTextAreaVal] = useState(default_question);
-  const [mainButtonText, setMainButtonText] = useState(default_button_text);
+  const [textareaValue, settextareaValue] = useState(defaultQuestion);
+  const [mainButtonText, setMainButtonText] = useState(defaultButtonText);
   const [mainButtonDisabled, setMainButtonDisabled] = useState(false);
   const [luckyButtonDisabled, setLuckyButtonDisabled] = useState(false);
   const [answerJsx, setAnswerJsx] = useState(null);
@@ -25,9 +24,9 @@ function App() {
     if (answering) {
       return;
     }
-    const trimmedTextAreaVal = textareaVal.trim();
-    if (trimmedTextAreaVal) {
-      setMainButtonText(default_button_text);
+    const trimmedtextareaValueue = textareaValue.trim();
+    if (trimmedtextareaValueue) {
+      setMainButtonText(defaultButtonText);
       setBothButtonsDisabled(false);
     } else {
       setMainButtonText("Ask a Question");
@@ -36,61 +35,58 @@ function App() {
     }
   };
 
-  useEffect(reSetButtons, [textareaVal, answering]);
+  useEffect(reSetButtons, [textareaValue, answering]);
 
-  const handleQuestionChanged = (newTextAreaVal) => {
-    setTextAreaVal(newTextAreaVal);
+  const handleQuestionChanged = (newTextareaValue) => {
+    settextareaValue(newTextareaValue);
   };
 
   const handleButtonClicked = (lucky) => {
     setAnswering(true);
     setMainButtonText("Answering...");
-    const waiting_responses = [
+    const waitingResponses = [
       "Sahil seems to have gone out, he'll be back in a second!",
       "That's the first time someone asked me that, let me think...",
       "Hmmm, that's a tough one. Let me frame it properly for you.",
       "Good answers take time, please wait a moment.",
       "Your (api) call is valuable to us, please stay on line.",
     ];
-    const rand_resp =
-      waiting_responses[Math.floor(Math.random() * waiting_responses.length)];
+    const randomWaitingResponse =
+      waitingResponses[Math.floor(Math.random() * waitingResponses.length)];
 
-    setAnswerJsx(<p style={{ margin: "15px 3px" }}>{rand_resp}</p>);
+    setAnswerJsx(<p style={{ margin: "15px 3px" }}>{randomWaitingResponse}</p>);
     setBothButtonsDisabled(true);
 
-    const ques_field = lucky ? "I am feeling lucky" : textareaVal;
+    const questionField = lucky ? "I am feeling lucky" : textareaValue;
 
-    const api_call_string =
+    const apiCallString =
       "http://ec2-18-206-57-36.compute-1.amazonaws.com:3000/api/v1/ask?question=" +
-      ques_field +
+      questionField +
       "&strategy=sahils_strategy_ruby";
-    fetch(api_call_string)
-      .then((r) => r.json())
+    fetch(apiCallString)
+      .then((resp) => resp.json())
       .then((data) => {
-        setTextAreaVal(data["question"]);
-        const answer_text = data["answer"];
+        settextareaValue(data.question);
+        const answer = data.answer;
 
-        window.responsiveVoice.speak(answer_text, "UK English Male");
+        window.responsiveVoice.speak(answer, "UK English Male");
 
-        const total_time_to_type = typing_delay * answer_text.length;
+        const totalTypingTime = typingDelay * answer.length;
 
+        for (let i = 0; i < answer.length; i++) {
+          setTimeout(() => {
+            setAnswerJsx(
+              <p style={{ margin: "15px 3px" }}>
+                <strong>Answer: </strong>&nbsp;{answer.slice(0, i + 1)}
+              </p>
+            );
+          }, i * typingDelay);
+        }
         setTimeout(() => {
           window.scrollTo(0, document.documentElement.scrollHeight);
           setAnswering(false);
           reSetButtons();
-        }, total_time_to_type);
-
-        let j = 1;
-        for (let i = 0; i < answer_text.length; i++) {
-          setTimeout(() => {
-            setAnswerJsx(
-              <p style={{ margin: "15px 3px" }}>
-                <strong>Answer: </strong>&nbsp;{answer_text.slice(0, j)}
-              </p>
-            );
-            j++;
-          }, i * typing_delay);
-        }
+        }, totalTypingTime);
       });
   };
 
@@ -145,7 +141,7 @@ function App() {
             onChange={(event) => {
               handleQuestionChanged(event.target.value);
             }}
-            value={textareaVal}
+            value={textareaValue}
             onKeyDown={handleKeyDown}
             ref={textareaRef}
           ></textarea>
